@@ -47,16 +47,49 @@ public class TradeService {
 
         return response;
     }
-    public List<Trade> getAllTrades(){
-        return trades;
+    public List<TradeResponse> getAllTrades() {
+        List<TradeResponse> responses = new ArrayList<>();
+
+        for(Trade trade : trades) {
+            TradeResponse response = new TradeResponse();
+
+            response.setId(trade.getId());
+            response.setSymbol(trade.getSymbol());
+            response.setSide(trade.getSide());
+            response.setQuantity(trade.getQuantity());
+            response.setEntryPrice(trade.getEntryPrice());
+            response.setExitPrice(trade.getExitPrice());
+            response.setEntryTime(trade.getEntryTime());
+            response.setExitTime(trade.getExitTime());
+            response.setPnl(trade.getPnl());
+
+            responses.add(response);
+        }
+        return responses;
     }
 
-    public Trade getTradeById(Integer id){
-        for(Trade trade : trades){
-            if(trade.getId().equals(id)){
-                return trade;
+    public TradeResponse getTradeById(Integer id) {
+
+        for (Trade trade : trades) {
+
+            if (trade.getId().equals(id)) {
+
+                TradeResponse response = new TradeResponse();
+
+                response.setId(trade.getId());
+                response.setSymbol(trade.getSymbol());
+                response.setSide(trade.getSide());
+                response.setQuantity(trade.getQuantity());
+                response.setEntryPrice(trade.getEntryPrice());
+                response.setExitPrice(trade.getExitPrice());
+                response.setEntryTime(trade.getEntryTime());
+                response.setExitTime(trade.getExitTime());
+                response.setPnl(trade.getPnl());
+
+                return response;
             }
         }
+
         throw new TradeNotFoundException(id);
     }
 

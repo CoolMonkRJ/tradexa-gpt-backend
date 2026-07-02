@@ -39,31 +39,38 @@ public class TradeController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Trade>>> getAllTrades(){
-        List<Trade> trades = tradeService.getAllTrades();
+    public ResponseEntity<ApiResponse<List<TradeResponse>>> getAllTrades() {
 
-        ApiResponse<List<Trade>> response = new ApiResponse<>();
+        List<TradeResponse> trades = tradeService.getAllTrades();
+
+        ApiResponse<List<TradeResponse>> response = new ApiResponse<>();
+
         response.setSuccess(true);
-        response.setMessage("Trades Fetched successfully");
+        response.setMessage("Trades fetched successfully");
         response.setData(trades);
         response.setTimestamp(LocalDateTime.now());
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Trade>> getTradeById(
+    public ResponseEntity<ApiResponse<TradeResponse>> getTradeById(
             @PathVariable Integer id
-    ){
-        Trade trade = tradeService.getTradeById(id);
+    ) {
 
-        ApiResponse<Trade> response = new ApiResponse<>();
+        TradeResponse trade = tradeService.getTradeById(id);
+
+        ApiResponse<TradeResponse> response = new ApiResponse<>();
 
         response.setSuccess(true);
-        response.setMessage("Trade fetched succesfully");
+        response.setMessage("Trade fetched successfully");
         response.setData(trade);
         response.setTimestamp(LocalDateTime.now());
+
         return ResponseEntity.ok(response);
-        }
+    }
+
+
         @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteTrade(
             @PathVariable Integer id
