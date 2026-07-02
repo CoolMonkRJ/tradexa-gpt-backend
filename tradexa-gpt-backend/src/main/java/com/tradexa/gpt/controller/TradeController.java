@@ -78,13 +78,13 @@ public class TradeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Trade>> updateTrade(
+    public ResponseEntity<ApiResponse<TradeResponse>> updateTrade(
             @PathVariable Integer id,
-            @RequestBody Trade updatedTrade
+            @Valid @RequestBody TradeRequest request
     ) {
-        Trade trade = tradeService.updateTrade(id,updatedTrade);
+        TradeResponse trade = tradeService.updateTrade(id, request);
 
-        ApiResponse<Trade> response = new ApiResponse<>();
+        ApiResponse<TradeResponse> response = new ApiResponse<>();
         response.setSuccess(true);
         response.setMessage("Trade updated successfully");
         response.setData(trade);

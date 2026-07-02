@@ -72,23 +72,40 @@ public class TradeService {
         }
         throw new TradeNotFoundException(id);
     }
+    public TradeResponse updateTrade(Integer id, TradeRequest request) {
 
-    public Trade updateTrade(Integer id, Trade updatedTrade) {
+        for (Trade trade : trades) {
 
-        for( Trade trade : trades) {
-            if(trade.getId().equals(id)) {
-                trade.setSymbol(updatedTrade.getSymbol());
-                trade.setSide(updatedTrade.getSide());
-                trade.setQuantity(updatedTrade.getQuantity());
-                trade.setEntryPrice(updatedTrade.getEntryPrice());
-                trade.setExitPrice(updatedTrade.getExitPrice());
-                trade.setEntryTime(updatedTrade.getEntryTime());
-                trade.setExitTime(updatedTrade.getExitTime());
-                trade.setPnl(updatedTrade.getPnl());
+            if (trade.getId().equals(id)) {
 
-                return trade;
+                // Update the existing trade
+                trade.setSymbol(request.getSymbol());
+                trade.setSide(request.getSide());
+                trade.setQuantity(request.getQuantity());
+                trade.setEntryPrice(request.getEntryPrice());
+                trade.setExitPrice(request.getExitPrice());
+                trade.setEntryTime(request.getEntryTime());
+                trade.setExitTime(request.getExitTime());
+                trade.setPnl(request.getPnl());
+
+                // Convert Entity -> Response DTO
+                TradeResponse response = new TradeResponse();
+
+                response.setId(trade.getId());
+                response.setSymbol(trade.getSymbol());
+                response.setSide(trade.getSide());
+                response.setQuantity(trade.getQuantity());
+                response.setEntryPrice(trade.getEntryPrice());
+                response.setExitPrice(trade.getExitPrice());
+                response.setEntryTime(trade.getEntryTime());
+                response.setExitTime(trade.getExitTime());
+                response.setPnl(trade.getPnl());
+
+                return response;
             }
         }
+
         throw new TradeNotFoundException(id);
     }
+
 }
