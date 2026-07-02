@@ -1,11 +1,14 @@
 package com.tradexa.gpt.controller;
 
 import com.tradexa.gpt.common.ApiResponse;
+import com.tradexa.gpt.dto.TradeRequest;
+import com.tradexa.gpt.dto.TradeResponse;
 import com.tradexa.gpt.entity.Trade;
 import com.tradexa.gpt.service.TradeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.time.LocalDateTime;
@@ -19,13 +22,14 @@ public class TradeController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Trade>> addTrade(
-            @RequestBody Trade trade
-    ){
+    public ResponseEntity<ApiResponse<TradeResponse>> addTrade(
+            @Valid
+            @RequestBody TradeRequest request
+            ){
 
-        Trade savedTrade = tradeService.addTrade(trade);
+        TradeResponse savedTrade = tradeService.addTrade(request);
 
-        ApiResponse<Trade> response = new ApiResponse<>();
+        ApiResponse<TradeResponse> response = new ApiResponse<>();
         response.setSuccess(true);
         response.setMessage("Trade created successfully");
         response.setData(savedTrade);

@@ -1,6 +1,8 @@
 package com.tradexa.gpt.service;
 
 import com.tradexa.gpt.controller.TradeController;
+import com.tradexa.gpt.dto.TradeRequest;
+import com.tradexa.gpt.dto.TradeResponse;
 import com.tradexa.gpt.entity.Trade;
 import com.tradexa.gpt.exception.TradeNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,37 @@ import java.util.Iterator;
 public class TradeService {
 
     private final List<Trade> trades = new ArrayList<>();
-    private Integer nextId = 1;
+    private int nextId = 1;
 
-    public Trade addTrade(Trade trade){
-        trade.setId(nextId);
-        nextId++;
+
+    public TradeResponse addTrade(TradeRequest request){
+        Trade trade = new Trade();
+
+        trade.setId(nextId++);
+        trade.setSymbol(request.getSymbol());
+        trade.setSide(request.getSide());
+        trade.setQuantity(request.getQuantity());
+        trade.setEntryPrice(request.getEntryPrice());
+        trade.setExitPrice(request.getExitPrice());
+        trade.setEntryTime(request.getEntryTime());
+        trade.setExitTime(request.getExitTime());
+        trade.setPnl(request.getPnl());
+
         trades.add(trade);
-        return trade;
+
+        TradeResponse response = new TradeResponse();
+
+        response.setId(trade.getId());
+        response.setSymbol(trade.getSymbol());
+        response.setSide(trade.getSide());
+        response.setQuantity(trade.getQuantity());
+        response.setEntryPrice(trade.getEntryPrice());
+        response.setExitPrice(trade.getExitPrice());
+        response.setEntryTime(trade.getEntryTime());
+        response.setExitTime(trade.getExitTime());
+        response.setPnl(trade.getPnl());
+
+        return response;
     }
     public List<Trade> getAllTrades(){
         return trades;
