@@ -3,23 +3,25 @@ package com.tradexa.gpt.dto;
 public class UploadResponseDTO {
     private  String fileName;
     private long fileSize;
-    private String message;
+    private String fileType;
 
-    public UploadResponseDTO(String fileName,
-                             long fileSize,
-                             String message){
-        this.fileName=fileName;
-        this.fileSize=fileSize;
-        this.message=message;
+    public void setFileName(String fileName) {
+        this.fileName =fileName;
     }
 
-    public  String getFileName(){
-        return fileName;
+    public String getFileType() {
+        return fileType;
     }
-    public long getFileSize(){
-        return  fileSize;
+
+    public void setFileType(String fileType) {
+        this.fileType=fileType;
     }
-    public  String getMessage(){
-        return message;
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 }

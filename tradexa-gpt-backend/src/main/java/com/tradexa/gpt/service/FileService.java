@@ -7,14 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileService {
 
-    public UploadResponseDTO uploadFile(MultipartFile file){
-        String fileName = file.getOriginalFilename();
-        long fileSize = file.getSize();
+    public UploadResponseDTO uploadFile(MultipartFile file) {
 
-        return new UploadResponseDTO(
-                fileName,
-                fileSize,
-                "File uploaded successfully"
-        );
+        UploadResponseDTO response = new UploadResponseDTO();
+
+        response.setFileName(file.getOriginalFilename());
+        response.setFileType(file.getContentType());
+        response.setFileSize(file.getSize());
+
+        return response;
     }
 }

@@ -1,10 +1,10 @@
 package com.tradexa.gpt.service;
 
-import com.tradexa.gpt.controller.TradeController;
 import com.tradexa.gpt.dto.TradeRequest;
 import com.tradexa.gpt.dto.TradeResponse;
 import com.tradexa.gpt.entity.Trade;
 import com.tradexa.gpt.exception.TradeNotFoundException;
+import com.tradexa.gpt.mapper.TradeMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,51 +19,16 @@ public class TradeService {
 
 
     public TradeResponse addTrade(TradeRequest request){
-        Trade trade = new Trade();
-
+        Trade trade =  TradeMapper.toEntity(request);
         trade.setId(nextId++);
-        trade.setSymbol(request.getSymbol());
-        trade.setSide(request.getSide());
-        trade.setQuantity(request.getQuantity());
-        trade.setEntryPrice(request.getEntryPrice());
-        trade.setExitPrice(request.getExitPrice());
-        trade.setEntryTime(request.getEntryTime());
-        trade.setExitTime(request.getExitTime());
-        trade.setPnl(request.getPnl());
-
         trades.add(trade);
-
-        TradeResponse response = new TradeResponse();
-
-        response.setId(trade.getId());
-        response.setSymbol(trade.getSymbol());
-        response.setSide(trade.getSide());
-        response.setQuantity(trade.getQuantity());
-        response.setEntryPrice(trade.getEntryPrice());
-        response.setExitPrice(trade.getExitPrice());
-        response.setEntryTime(trade.getEntryTime());
-        response.setExitTime(trade.getExitTime());
-        response.setPnl(trade.getPnl());
-
-        return response;
+        return TradeMapper.toResponse(trade);
     }
     public List<TradeResponse> getAllTrades() {
         List<TradeResponse> responses = new ArrayList<>();
 
-        for(Trade trade : trades) {
-            TradeResponse response = new TradeResponse();
-
-            response.setId(trade.getId());
-            response.setSymbol(trade.getSymbol());
-            response.setSide(trade.getSide());
-            response.setQuantity(trade.getQuantity());
-            response.setEntryPrice(trade.getEntryPrice());
-            response.setExitPrice(trade.getExitPrice());
-            response.setEntryTime(trade.getEntryTime());
-            response.setExitTime(trade.getExitTime());
-            response.setPnl(trade.getPnl());
-
-            responses.add(response);
+        for (Trade trade : trades) {
+            responses.add(TradeMapper.toResponse(trade));
         }
         return responses;
     }
@@ -73,25 +38,13 @@ public class TradeService {
         for (Trade trade : trades) {
 
             if (trade.getId().equals(id)) {
-
-                TradeResponse response = new TradeResponse();
-
-                response.setId(trade.getId());
-                response.setSymbol(trade.getSymbol());
-                response.setSide(trade.getSide());
-                response.setQuantity(trade.getQuantity());
-                response.setEntryPrice(trade.getEntryPrice());
-                response.setExitPrice(trade.getExitPrice());
-                response.setEntryTime(trade.getEntryTime());
-                response.setExitTime(trade.getExitTime());
-                response.setPnl(trade.getPnl());
-
-                return response;
+                return TradeMapper.toResponse(trade);
             }
         }
 
         throw new TradeNotFoundException(id);
     }
+
 
     public  void deleteTrade(Integer id) {
 
@@ -111,7 +64,6 @@ public class TradeService {
 
             if (trade.getId().equals(id)) {
 
-                // Update the existing trade
                 trade.setSymbol(request.getSymbol());
                 trade.setSide(request.getSide());
                 trade.setQuantity(request.getQuantity());
@@ -121,20 +73,7 @@ public class TradeService {
                 trade.setExitTime(request.getExitTime());
                 trade.setPnl(request.getPnl());
 
-                // Convert Entity -> Response DTO
-                TradeResponse response = new TradeResponse();
-
-                response.setId(trade.getId());
-                response.setSymbol(trade.getSymbol());
-                response.setSide(trade.getSide());
-                response.setQuantity(trade.getQuantity());
-                response.setEntryPrice(trade.getEntryPrice());
-                response.setExitPrice(trade.getExitPrice());
-                response.setEntryTime(trade.getEntryTime());
-                response.setExitTime(trade.getExitTime());
-                response.setPnl(trade.getPnl());
-
-                return response;
+                return TradeMapper.toResponse(trade);
             }
         }
 
