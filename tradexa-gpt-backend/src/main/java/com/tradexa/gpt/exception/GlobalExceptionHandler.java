@@ -45,4 +45,33 @@ public class GlobalExceptionHandler {
 
     return  new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(InvalidFileException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidFile(
+            InvalidFileException ex
+    ) {
+        ApiResponse<Void> response = new ApiResponse<>();
+
+        response.setSuccess(false);
+        response.setMessage(ex.getMessage());
+        response.setData(null);
+        response.setTimestamp(LocalDateTime.now());
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(CsvParsingException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCsvParsing(
+            CsvParsingException ex
+    ) {
+
+        ApiResponse<Void> response = new ApiResponse<>();
+
+        response.setSuccess(false);
+        response.setMessage(ex.getMessage());
+        response.setData(null);
+        response.setTimestamp(LocalDateTime.now());
+
+        return ResponseEntity.badRequest().body(response);
+    }
 }

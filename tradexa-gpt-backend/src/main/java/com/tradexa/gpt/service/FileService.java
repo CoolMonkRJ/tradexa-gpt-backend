@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.tradexa.gpt.entity.Trade;
 import com.tradexa.gpt.parser.CsvTradeParser;
+import com.tradexa.gpt.exception.InvalidFileException;
+
 
 import java.util.List;
 
@@ -17,7 +19,18 @@ public class FileService {
     }
 
     public UploadResponseDTO uploadFile(MultipartFile file) {
+
+        if (file.isEmpty()) {
+            throw new InvalidFileException("File is empty.");
+        }
+
+        String fileName = file.getOriginalFilename();
+
+        if (fileName == null || !fileName.toLowerCase().endsWith(".csv")) {
+            throw new InvalidFileException("Only CSV files are allowed.");
+        }
         List<Trade> trades = csvTradeParser.parse(file);
+        System.out.println("Trades parsed :" +trades.size());
         UploadResponseDTO response = new UploadResponseDTO();
 
         response.setFileName(file.getOriginalFilename());
