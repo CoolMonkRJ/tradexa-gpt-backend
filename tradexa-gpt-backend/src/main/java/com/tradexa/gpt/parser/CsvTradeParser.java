@@ -3,6 +3,7 @@ package com.tradexa.gpt.parser;
 import com.tradexa.gpt.entity.Trade;
 import com.tradexa.gpt.entity.TradeSide;
 import com.tradexa.gpt.exception.CsvParsingException;
+import com.tradexa.gpt.util.ParserUtil;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -33,39 +34,47 @@ public class CsvTradeParser {
 
             for(CSVRecord record : csvParser) {
                 Trade trade = new Trade();
-                trade.setSymbol(record.get("Symbol"));
+                trade.setSymbol(
+                        ParserUtil.parseString(record.get("Symbol"))
+                );
 
-                trade.setSide(TradeSide.valueOf(record.get("Side").toUpperCase()));
-                trade.setQuantity(Integer.parseInt(record.get("Quantity")));
+                trade.setSide(
+                        ParserUtil.parseTradeSide(record.get("Side"))
+                );
+
+                trade.setQuantity(
+                        ParserUtil.parseInteger(record.get("Quantity"))
+                );
+
                 trade.setEntryPrice(
-                        new BigDecimal(record.get("EntryPrice"))
+                        ParserUtil.parseBigDecimal(record.get("EntryPrice"))
                 );
 
                 trade.setExitPrice(
-                        new BigDecimal(record.get("ExitPrice"))
+                        ParserUtil.parseBigDecimal(record.get("ExitPrice"))
                 );
 
                 trade.setEntryTime(
-                        LocalDateTime.parse(
-                                record.get("EntryTime")
-                        )
+                        ParserUtil.parseDate(record.get("EntryTime"))
                 );
 
                 trade.setExitTime(
-                        LocalDateTime.parse(
-                                record.get("ExitTime")
-                        )
+                        ParserUtil.parseDate(record.get("ExitTime"))
                 );
 
                 trade.setPnl(
-                        new BigDecimal(record.get("Pnl"))
+                        ParserUtil.parseBigDecimal(record.get("Pnl"))
                 );
 
                 trades.add(trade);
             }
+
         } catch (Exception e) {
-            throw new CsvParsingException("Unable to parse CSV file");
+
+            throw new RuntimeException("Failed to parse CSV file.", e);
+
         }
+
         return trades;
     }
 }
