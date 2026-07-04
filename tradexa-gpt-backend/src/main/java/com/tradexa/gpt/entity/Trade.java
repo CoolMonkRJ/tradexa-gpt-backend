@@ -1,9 +1,14 @@
 package com.tradexa.gpt.entity;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "trades")
 public class Trade {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String symbol;
     private TradeSide side;
