@@ -5,79 +5,66 @@ import com.tradexa.gpt.dto.TradeResponse;
 import com.tradexa.gpt.entity.Trade;
 import com.tradexa.gpt.exception.TradeNotFoundException;
 import com.tradexa.gpt.mapper.TradeMapper;
+import com.tradexa.gpt.repository.TradeRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
+
 
 @Service
 public class TradeService {
 
-    private final List<Trade> trades = new ArrayList<>();
-    private int nextId = 1;
+    private final TradeRepository tradeRepository;
+
+    public TradeService(TradeRepository tradeRepository) {
+        this.tradeRepository = tradeRepository;
+    }
 
 
     public TradeResponse addTrade(TradeRequest request){
         Trade trade =  TradeMapper.toEntity(request);
-        trade.setId(nextId++);
-        trades.add(trade);
-        return TradeMapper.toResponse(trade);
+        Trade savedTrade = tradeRepository.save(trade);
+        return TradeMapper.toResponse(savedTrade);
     }
     public List<TradeResponse> getAllTrades() {
-        List<TradeResponse> responses = new ArrayList<>();
-
-        for (Trade trade : trades) {
-            responses.add(TradeMapper.toResponse(trade));
-        }
-        return responses;
+        List<Trade> trades = tradeRepository.findAll();
+        return trades.stream().map(TradeMapper::toResponse).toList();
     }
 
     public TradeResponse getTradeById(Integer id) {
 
-        for (Trade trade : trades) {
+        Trade trade = tradeRepository.findById(id)
+                .orElseThrow(() -> new TradeNotFoundException(id));
 
-            if (trade.getId().equals(id)) {
-                return TradeMapper.toResponse(trade);
-            }
-        }
-
-        throw new TradeNotFoundException(id);
+        return TradeMapper.toResponse(trade);
     }
 
+    public void deleteTrade(Integer id) {
 
-    public  void deleteTrade(Integer id) {
-
-        Iterator<Trade> iterator = trades.iterator();
-        while(iterator.hasNext()) {
-            Trade trade = iterator.next();
-            if(trade.getId().equals(id)) {
-                iterator.remove();
-                return;
-            }
+        if (!tradeRepository.existsById(id)) {
+            throw new TradeNotFoundException(id);
         }
-        throw new TradeNotFoundException(id);
+
+        tradeRepository.deleteById(id);
     }
+
     public TradeResponse updateTrade(Integer id, TradeRequest request) {
 
-        for (Trade trade : trades) {
+        Trade trade = tradeRepository.findById(id)
+                .orElseThrow(() -> new TradeNotFoundException(id));
 
-            if (trade.getId().equals(id)) {
+        trade.setSymbol(request.getSymbol());
+        trade.setSide(request.getSide());
+        trade.setQuantity(request.getQuantity());
+        trade.setEntryPrice(request.getEntryPrice());
+        trade.setExitPrice(request.getExitPrice());
+        trade.setEntryTime(request.getEntryTime());
+        trade.setExitTime(request.getExitTime());
+        trade.setPnl(request.getPnl());
 
-                trade.setSymbol(request.getSymbol());
-                trade.setSide(request.getSide());
-                trade.setQuantity(request.getQuantity());
-                trade.setEntryPrice(request.getEntryPrice());
-                trade.setExitPrice(request.getExitPrice());
-                trade.setEntryTime(request.getEntryTime());
-                trade.setExitTime(request.getExitTime());
-                trade.setPnl(request.getPnl());
+        Trade updatedTrade = tradeRepository.save(trade);
 
-                return TradeMapper.toResponse(trade);
-            }
-        }
-
-        throw new TradeNotFoundException(id);
+        return TradeMapper.toResponse(updatedTrade);
     }
 
 }
