@@ -70,4 +70,8 @@ public class AnalyticsSummaryResponse {
     public void setAverageLoss(BigDecimal averageLoss) {
         this.averageLoss = averageLoss;
     }
+
+    public void setTotalPnL(BigDecimal totalPnl) {
+        this.totalPnl = totalPnl;
+    }
 }
