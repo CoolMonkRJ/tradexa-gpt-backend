@@ -67,4 +67,10 @@ public class TradeService {
         return TradeMapper.toResponse(updatedTrade);
     }
 
+    public void saveAllTrades(List<Trade> trades) {
+
+        tradeRepository.saveAll(trades);
+
+    }
+
 }

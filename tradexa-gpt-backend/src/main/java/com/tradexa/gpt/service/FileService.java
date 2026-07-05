@@ -13,9 +13,12 @@ import java.util.List;
 @Service
 public class FileService {
     private final CsvTradeParser csvTradeParser;
+    private final TradeService tradeService;
 
-    public FileService(CsvTradeParser csvTradeParser) {
+    public FileService(CsvTradeParser csvTradeParser,TradeService tradeService)
+    {
         this.csvTradeParser=csvTradeParser;
+        this.tradeService=tradeService;
     }
 
     public UploadResponseDTO uploadFile(MultipartFile file) {
@@ -30,6 +33,7 @@ public class FileService {
             throw new InvalidFileException("Only CSV files are allowed.");
         }
         List<Trade> trades = csvTradeParser.parse(file);
+        tradeService.saveAllTrades(trades);
         System.out.println("Trades parsed :" +trades.size());
         UploadResponseDTO response = new UploadResponseDTO();
 

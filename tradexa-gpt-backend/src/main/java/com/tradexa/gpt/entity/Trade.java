@@ -18,6 +18,17 @@ public class Trade {
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
     private BigDecimal pnl;
+    private String broker;
+
+    private String strategy;
+
+    private String timeframe;
+
+    private String tags;
+
+    private BigDecimal commission;
+
+    private BigDecimal slippage;
 
     public Trade(){
 
