@@ -58,3 +58,5 @@ This project is being built from scratch following production-level backend prac
 ## 📌 Project Status
 
 🚧 Currently under active development.
+
+Swagger_UI.png
