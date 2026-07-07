@@ -5,8 +5,10 @@ import com.tradexa.gpt.dto.AnalyticsSummaryResponse;
 import com.tradexa.gpt.analytics.AnalyticsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.tradexa.gpt.dto.SymbolAnalyticsResponse;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/analytics")
@@ -29,6 +31,22 @@ public class AnalyticsController {
         response.setMessage("Analytics fetched successfully");
         response.setData(summary);
         response.setTimestamp(LocalDateTime.now());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/symbols")
+    public ResponseEntity<ApiResponse<List<SymbolAnalyticsResponse>>>getSymbolAnalytics() {
+
+        List<SymbolAnalyticsResponse> analytics =
+                analyticsService.getSymbolAnalytics();
+
+        ApiResponse<List<SymbolAnalyticsResponse>> response = new ApiResponse<>();
+
+        response.setSuccess(true);
+        response.setMessage("Symbol analytics fetched successfully");
+        response.setData(analytics);
+        response.setTimestamp(java.time.LocalDateTime.now());
 
         return ResponseEntity.ok(response);
     }
