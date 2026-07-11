@@ -7,6 +7,7 @@ import com.tradexa.gpt.entity.UserRole;
 import com.tradexa.gpt.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.tradexa.gpt.exception.UserAlreadyExistsException;
 
 @Service
 public class UserService {
@@ -20,8 +21,8 @@ public class UserService {
     }
 
     public RegisterResponse register(RegisterRequest request) {
-        if(userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered");
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new UserAlreadyExistsException(request.getEmail());
         }
 
         User user = new User();
