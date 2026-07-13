@@ -8,16 +8,24 @@ import com.tradexa.gpt.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.tradexa.gpt.exception.UserAlreadyExistsException;
+import com.tradexa.gpt.security.JwtService;
+import com.tradexa.gpt.dto.LoginRequest;
+import com.tradexa.gpt.dto.LoginResponse;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository,BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       BCryptPasswordEncoder passwordEncoder,
+                       JwtService jwtService) {
+
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public RegisterResponse register(RegisterRequest request) {
@@ -42,6 +50,27 @@ public class UserService {
         response.setName(savedUser.getName());
         response.setEmail(savedUser.getEmail());
         response.setRole(savedUser.getRole().name());
+
+        return response;
+    }
+    public LoginResponse login(LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid email or password."));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid email or password.");
+        }
+
+        String token = jwtService.generateToken(user.getEmail());
+
+        LoginResponse response = new LoginResponse();
+
+        response.setToken(token);
+        response.setEmail(user.getEmail());
+        response.setName(user.getName());
+        response.setRole(user.getRole().name());
 
         return response;
     }

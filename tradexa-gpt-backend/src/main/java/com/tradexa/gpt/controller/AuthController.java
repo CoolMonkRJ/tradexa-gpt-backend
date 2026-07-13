@@ -7,6 +7,8 @@ import com.tradexa.gpt.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.tradexa.gpt.dto.LoginRequest;
+import com.tradexa.gpt.dto.LoginResponse;
 
 import java.time.LocalDateTime;
 
@@ -33,5 +35,20 @@ public class AuthController {
         response.setTimestamp(LocalDateTime.now());
 
         return new ResponseEntity<>(response,HttpStatus.CREATED);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
+            @RequestBody LoginRequest request) {
+
+        LoginResponse loginResponse = userService.login(request);
+
+        ApiResponse<LoginResponse> response = new ApiResponse<>();
+
+        response.setSuccess(true);
+        response.setMessage("Login successful");
+        response.setData(loginResponse);
+        response.setTimestamp(LocalDateTime.now());
+
+        return ResponseEntity.ok(response);
     }
 }
