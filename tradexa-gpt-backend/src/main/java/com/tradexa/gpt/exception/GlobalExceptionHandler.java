@@ -74,4 +74,18 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserAlreadyExists(
+            UserAlreadyExistsException ex) {
+
+        ApiResponse<Void> response = new ApiResponse<>();
+
+        response.setSuccess(false);
+        response.setMessage(ex.getMessage());
+        response.setData(null);
+        response.setTimestamp(LocalDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
 }
